@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест API Авторизации</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Тест API Авторизации</h1>
+
+        <div class="form-group">
+            <label for="apiUrl">API URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:5001/api/auth/login" placeholder="http://localhost:5001/api/auth/login">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="methodist@example.com" placeholder="methodist@example.com">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" value="admin123" placeholder="admin123">
+        </div>
+
+        <button onclick="testLogin()">🚀 Проверить авторизацию</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testLogin() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            // Показать загрузку
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Отправка запроса...</p></div>';
+
+            try {
+                const requestBody = {
+                    email: email,
+                    password: password
+                };
+
+                // Показать данные запроса
+                const requestInfo = `📤 Отправка запроса:\n\nURL: ${apiUrl}\nMethod: POST\nHeaders: Content-Type: application/json\n\nRequest Body:\n${JSON.stringify(requestBody, null, 2)}`;
+
+                console.log(requestInfo);
+
+                const startTime = Date.now();
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+✅ Авторизация успешна!
+
+⏱️ Время ответа: ${duration}ms
+📊 Статус: ${response.status} ${response.statusText}
+
+📥 Response Body:
+${JSON.stringify(data, null, 2)}
+
+📋 Детали:
+• Access Token: ${data.access_token ? '✓ Получен' : '✗ Отсутствует'}
+• Token Type: ${data.token_type || 'Не указан'}
+• Token Length: ${data.access_token ? data.access_token.length : 0} символов
+                    `.trim();
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+❌ Ошибка авторизации!
+
+⏱️ Время ответа: ${duration}ms
+📊 Статус: ${response.status} ${response.statusText}
+
+📥 Response Body:
+${JSON.stringify(data, null, 2)}
+                    `.trim();
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+❌ Ошибка подключения!
+
+Сообщение об ошибке:
+${error.message}
+
+Возможные причины:
+• Backend сервер не запущен
+• Неверный URL API
+• Проблемы с CORS
+• Проблемы с сетевым подключением
+
+💡 Убедитесь, что backend запущен на http://localhost:5001
+                `.trim();
+                console.error('Ошибка:', error);
+            }
+        }
+
+        // Автоматический тест при загрузке (опционально)
+        // window.onload = () => testLogin();
+    </script>
+</body>
+</html>
