@@ -4,7 +4,8 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
 
 const navItems = [
   { name: 'Дашборд', path: '/student/dashboard', icon: '🏠' },
-  { name: 'Курсы', path: '/student/courses', icon: '📚' }
+  { name: 'Курсы', path: '/student/courses', icon: '📚' },
+  { name: 'Кейсы', path: '/student/cases', icon: '📋' }
 ]
 </script>
 

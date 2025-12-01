@@ -5,6 +5,7 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
 const navItems = [
   { name: 'Дашборд', path: '/methodist/dashboard', icon: '📊' },
   { name: 'Курсы', path: '/methodist/courses', icon: '📚' },
+  { name: 'Кейсы', path: '/methodist/cases', icon: '📋' },
   { name: 'Результаты', path: '/methodist/results', icon: '📈' }
 ]
 </script>

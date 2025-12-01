@@ -3,6 +3,7 @@ export interface User {
   email: string
   full_name: string
   role: 'student' | 'methodist'
+  created_at?: string
 }
 
 export interface LoginRequest {

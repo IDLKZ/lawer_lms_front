@@ -61,6 +61,21 @@ const router = createRouter({
           path: 'results',
           name: 'methodist-results',
           component: () => import('@/views/methodist/ResultsView.vue')
+        },
+        {
+          path: 'cases',
+          name: 'methodist-cases',
+          component: () => import('@/views/methodist/CasesView.vue')
+        },
+        {
+          path: 'cases/create',
+          name: 'methodist-case-create',
+          component: () => import('@/views/methodist/CaseCreateView.vue')
+        },
+        {
+          path: 'cases/:id/edit',
+          name: 'methodist-case-edit',
+          component: () => import('@/views/methodist/CaseEditView.vue')
         }
       ]
     },
@@ -93,6 +108,16 @@ const router = createRouter({
           path: 'tests/:id/result',
           name: 'student-test-result',
           component: () => import('@/views/student/TestResultView.vue')
+        },
+        {
+          path: 'cases',
+          name: 'student-cases',
+          component: () => import('@/views/student/CasesView.vue')
+        },
+        {
+          path: 'cases/:id',
+          name: 'student-case-detail',
+          component: () => import('@/views/student/CaseDetailView.vue')
         }
       ]
     }
